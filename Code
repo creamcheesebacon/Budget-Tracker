@@ -1,0 +1,170 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <cmath>
+
+using namespace std;
+
+class Expense {
+protected:
+    double amount;
+
+public:
+    virtual void setAmount() {
+        cout << "Enter the expense: Rs";
+        cin >> amount;
+    }
+
+    virtual double getAmount() const {
+        return amount;
+    }
+
+    virtual string getCategory() const {
+        return "Generic ";
+    }
+};
+
+class BudgetCategory : public Expense {
+    string category;
+
+public:
+    BudgetCategory(const string &cat) : category(cat) {}
+
+    void setAmount() override {
+        cout << "Enter the expense for " << category << ": Rs";
+        cin >> amount;
+      }
+
+    string getCategory() const override {
+        return category;
+    }
+};
+
+class MonthlyBudget {
+protected:
+    Expense *categories[10];
+
+public:
+     MonthlyBudget() {
+        string categoryNames[10] = {
+            "Category1",
+            "Category2",
+            "Category3",
+            "Category4",
+            "Category5",
+            "Category6",
+            "Category7",
+            "Category8",
+            "Category9",
+            "Category10"
+        };
+
+        for (int i = 0; i < 10; ++i) {
+            categories[i] = new BudgetCategory(categoryNames[i]);
+        }
+    }
+    ~MonthlyBudget() {
+        for (int i = 0; i < 10; ++i) {
+            delete categories[i];
+        }
+    }
+    void setBudgetCategory(int index, const string &category) {
+        if (index >= 0 && index < 10) {
+            delete categories[index];
+            categories[index] = new BudgetCategory(category);
+        }
+    }
+
+    Expense* getCategory(int index) {
+        if (index >= 0 && index < 10) {
+            return categories[index];
+        }
+        return NULL; // Use NULL instead of nullptr
+    }
+};
+
+class BudgetTracker {
+protected:
+    MonthlyBudget budget;
+    MonthlyBudget expenses;
+
+public:
+    BudgetTracker() {}
+
+    void setBudget() {
+        cout << "Enter your budget for the following expenses:\n";
+        for (int i = 0; i < 10; ++i) {
+            budget.getCategory(i)->setAmount();
+        }
+    }
+
+    void setExpenses() {
+        cout << "Enter your actual expenses for the following categories:\n";
+        for (int i = 0; i < 10; ++i) {
+            expenses.getCategory(i)->setAmount();
+        }
+     }
+
+    void displayReport() {
+        cout << fixed << showpoint << setprecision(2);
+        cout << "-------------------------------------------------\n";
+        cout << "Category          Budget    Spent    Over/Under\n";
+        cout << "-------------------------------------------------\n";
+        for (int i = 0; i < 10; ++i) {
+            string category = budget.getCategory(i)->getCategory();
+            double budgetAmount = budget.getCategory(i)->getAmount();
+            double expenseAmount = expenses.getCategory(i)->getAmount();
+            double difference = budgetAmount - expenseAmount;
+            cout << left << setw(18) << category;
+            cout << right << setw(9) << budgetAmount;
+            cout << right << setw(9) << expenseAmount;
+            cout << right << setw(13) << difference << "\n";
+        }
+
+        double totalBudget = 0.0;
+        double totalExpenses = 0.0;
+
+        for (int i = 0; i < 10; ++i) {
+            totalBudget += budget.getCategory(i)->getAmount();
+            totalExpenses += expenses.getCategory(i)->getAmount();
+        }
+
+        double difference = totalBudget - totalExpenses;
+        cout << "-------------------------------------------------\n";
+        cout << "Total Budget:     " << totalBudget << "\n";
+        cout << "Total Expenses:   " << totalExpenses << "\n";
+        cout << "Over/Under Budget: " << difference << "\n";
+        cout << "Percentage Used:  " << (totalExpenses / totalBudget) * 100 << "%" << endl;
+        cout << "Percentage Exceeded: " << (difference < 0 ? abs(difference) / totalBudget * 100 : 0) << "%" << endl;
+    }
+    void setBudgetCategory(int index, const string &category) {
+        budget.setBudgetCategory(index, category);
+    }
+
+    Expense* getBudgetCategory(int index) {
+        return budget.getCategory(index);
+    }
+
+    Expense* getExpenseCategory(int index) {
+        return expenses.getCategory(index);
+    }
+};
+
+int main() {
+    BudgetTracker tracker;
+    
+    
+
+    for (int i = 0; i < 10; ++i) {
+        string category;
+        cout << "Enter category name: ";
+        cin >> category;
+        tracker.setBudgetCategory(i, category);
+    }
+
+    tracker.setBudget();
+    tracker.setExpenses();
+    tracker.displayReport();
+
+    return 0;
+}
