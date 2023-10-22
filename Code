@@ -165,6 +165,6 @@ int main() {
     tracker.setBudget();
     tracker.setExpenses();
     tracker.displayReport();
-
-    return 0;
+    
+    return 0;
 }
