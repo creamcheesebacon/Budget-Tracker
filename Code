@@ -11,7 +11,7 @@ protected:
 
 public:
     virtual void setAmount() {
-        cout << "Enter the expense: Rs";
+        cout << "Enter the expense: ₹ ";
         cin >> amount;
     }
 
@@ -31,7 +31,7 @@ public:
     BudgetCategory(const string &cat) : category(cat) {}
 
     void setAmount() override {
-        cout << "Enter the expense for " << category << ": Rs";
+        cout << "Enter the expense for " << category << ": ₹ ";
         cin >> amount;
       }
 
@@ -131,11 +131,11 @@ public:
 
         double difference = totalBudget - totalExpenses;
         cout << "-------------------------------------------------\n";
-        cout << "Total Budget:     " << totalBudget << "\n";
-        cout << "Total Expenses:   " << totalExpenses << "\n";
-        cout << "Over/Under Budget: " << difference << "\n";
-        cout << "Percentage Used:  " << (totalExpenses / totalBudget) * 100 << "%" << endl;
-        cout << "Percentage Exceeded: " << (difference < 0 ? abs(difference) / totalBudget * 100 : 0) << "%" << endl;
+        cout << "Total Budget: ₹ " << totalBudget << "\n";
+        cout << "Total Expenses: ₹ " << totalExpenses << "\n";
+        cout << "Over/Under Budget: ₹ " << difference << "\n";
+        cout << "Percentage Used: " << (totalExpenses / totalBudget) * 100 << " %" << endl;
+        cout << "Percentage Exceeded: " << (difference < 0 ? abs(difference) / totalBudget * 100 : 0) << " %" << endl;
     }
     void setBudgetCategory(int index, const string &category) {
         budget.setBudgetCategory(index, category);
